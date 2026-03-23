@@ -243,28 +243,64 @@
     text-transform:uppercase;
   }
 
-  /* ANSWER */
-  .answer-area {
-    position:absolute;
-    bottom:19vh; left:50%; transform:translateX(-50%);
-    display:flex; gap:6px; align-items:center;
-    z-index:8; white-space:nowrap;
-    opacity:0; pointer-events:none; transition:opacity 0.35s;
+  /* CHOICES */
+  #choices {
+    position: absolute;
+    bottom: 12vh; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 120px;
+    z-index: 8;
+    opacity: 0; pointer-events: none; transition: opacity 0.35s;
   }
-  .answer-area.show { opacity:1; pointer-events:all; }
-  .answer-input {
-    background:rgba(255,255,255,0.82); border:2px solid var(--ink);
-    border-radius:2px; padding:5px 9px;
-    font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:0.82rem;
-    letter-spacing:0.1em; width:22vw; outline:none; font-size:1.4vw;
+  #choices.show { opacity: 1; pointer-events: all; }
+  .choice-circle {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.5s ease 0.2s;
+    position: absolute;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   }
-  .answer-btn {
-    background:var(--ink); color:#fff; border:none; border-radius:2px;
-    padding:0.8vh 1.2vw; font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:1.2vw;
-    letter-spacing:0.18em; text-transform:uppercase;
-    cursor:pointer; transition:background 0.15s;
+  .choice-circle:nth-child(1) { left: 40px; z-index: 4; }
+  .choice-circle:nth-child(2) { left: 110px; z-index: 3; }
+  .choice-circle:nth-child(3) { left: 180px; z-index: 2; }
+  .choice-circle:nth-child(4) { left: 250px; z-index: 1; }
+  .choice-circle .front, .choice-circle .back {
+    position: absolute;
+    width: 100%; height: 100%;
+    backface-visibility: hidden;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px;
+    color: white; text-align: center;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.2);
   }
-  .answer-btn:hover { background:var(--accent); }
+  .choice-circle .front {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), var(--color));
+  }
+  .choice-circle .front::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px; height: 15px;
+    background: #111;
+    border-radius: 50%;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+  }
+  .choice-circle .back {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), var(--color));
+    transform: rotateY(180deg);
+  }
+  .choice-circle:hover {
+    transform: rotateY(180deg) translateX(-160px);
+    z-index: 10;
+  }
+  .choice-circle:nth-child(1):hover,
+  .choice-circle:nth-child(2):hover {
+    transform: rotateY(180deg) translateX(160px);
+  }
 
   /* RESULT BADGE */
   .result-badge {
@@ -510,11 +546,8 @@
     <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
   </div>
 
-  <!-- ANSWER -->
-  <div class="answer-area" id="answerArea">
-    <input class="answer-input" id="answerInput" type="text" placeholder="Song name…" autocomplete="off"/>
-    <button class="answer-btn" onclick="checkAnswer()">Submit</button>
-  </div>
+  <!-- CHOICES -->
+  <div id="choices"></div>
 
   <!-- BOTTOM BAR: round dots + divider + lives, all in one row -->
   <div id="bottomBar">
@@ -744,7 +777,7 @@ function playSong(song) {
   setTimeout(()=>{
     playing=false;
     document.getElementById('eqBars').classList.remove('active');
-    if(!gameDead&&currentSong) setStatus('↺ Click to replay');
+    if(!gameDead&&currentSong) showChoices();
   },(t-ctx.currentTime)*1000+200);
 }
 
@@ -756,6 +789,8 @@ function stopSong() {
   }
   playing = false;
   document.getElementById('eqBars').classList.remove('active');
+  document.getElementById('choices').classList.remove('show');
+  document.getElementById('choices').innerHTML = '';
 }
 
 // ── BOOM / SHAKE ──────────────────────────────────────────────────────────────
@@ -1000,6 +1035,23 @@ function playGameOverGuitar() {
   hum.connect(humG); humG.connect(ctx.destination); hum.start(t+0.2); hum.stop(t+5.2);
 }
 
+// ── HOVER SOUND ────────────────────────────────────────────────────────────────
+function playHoverSound() {
+  const ctx = getCtx();
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const env = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(1000, t);
+  osc.frequency.exponentialRampToValueAtTime(400, t + 0.05);
+  env.gain.setValueAtTime(0.05, t);
+  env.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+  osc.connect(env);
+  env.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.1);
+}
+
 // ── ROUND / QUEUE ─────────────────────────────────────────────────────────────
 function buildQueue() {
   const shuffled=[...SONGS].sort(()=>Math.random()-0.5);
@@ -1024,7 +1076,14 @@ function loseLife(){
 
 // ── CLICK HANDLER ─────────────────────────────────────────────────────────────
 function handleClick(){
-  if(playing||gameDead) return;
+  if(gameDead) return;
+  if(playing) {
+    stopSong();
+    setStatus('▶ Click to hear again');
+    document.getElementById('choices').classList.remove('show');
+    document.getElementById('choices').innerHTML = '';
+    return;
+  }
   playing=true;
   if(roundIdx===0 && !currentSong){
     buildQueue();
@@ -1034,9 +1093,8 @@ function handleClick(){
   }
   if(!currentSong){
     currentSong=songQueue[roundIdx];
-    document.getElementById('answerArea').classList.add('show');
-    document.getElementById('answerInput').value='';
   }
+  showChoices();
   setStatus('🎵 Listen carefully…');
   document.getElementById('eqBars').classList.add('active');
   document.getElementById('resultBadge').classList.remove('show','correct','wrong','dead');
@@ -1073,6 +1131,7 @@ function checkAnswer(){
       setTimeout(()=>{badge.classList.remove('show'); setStatus('▶ Click the jukebox for the next song');},1800);
     }
   } else {
+    stopSong();
     loseLife(); triggerShake(); playWrongSound();
     const wrong=3-lives;
     applyGrunge(wrong); updateJukeboxState();
@@ -1350,8 +1409,8 @@ function resetGame(){
   document.getElementById('card').style.filter='';
   document.getElementById('roundBar').classList.remove('show');
   document.getElementById('barDivider').style.opacity = '0';
-  document.getElementById('answerArea').classList.remove('show');
-  document.getElementById('answerInput').value='';
+  document.getElementById('choices').classList.remove('show');
+  document.getElementById('choices').innerHTML = '';
   document.getElementById('eqBars').classList.remove('active');
   setStatus('▶ Click the jukebox to hear the song');
   document.getElementById('resultBadge').classList.remove('show','correct','wrong','dead');
@@ -1361,6 +1420,76 @@ function resetGame(){
 
 function setStatus(t){ document.getElementById('status').textContent=t; }
 document.getElementById('answerInput').addEventListener('keydown',e=>{if(e.key==='Enter') checkAnswer();});
+
+// ── CHOICES ───────────────────────────────────────────────────────────────────
+function showChoices() {
+  const choicesDiv = document.getElementById('choices');
+  choicesDiv.innerHTML = '';
+  const allSongs = SONGS.filter(s => s.name !== currentSong.name);
+  const wrongs = [];
+  while (wrongs.length < 3 && allSongs.length > 0) {
+    const idx = Math.floor(Math.random() * allSongs.length);
+    wrongs.push(allSongs.splice(idx, 1)[0]);
+  }
+  const options = [currentSong, ...wrongs].sort(() => Math.random() - 0.5);
+  const colors = ['#c0392b', '#e8a020', '#2e7d32', '#8e44ad']; // red, yellow, green, purple
+  options.forEach((option, i) => {
+    const circle = document.createElement('div');
+    circle.className = 'choice-circle';
+    circle.style.setProperty('--color', colors[i]);
+    circle.innerHTML = `
+      <div class="front"></div>
+      <div class="back">${option.name}</div>
+    `;
+    circle.onmouseenter = playHoverSound;
+    circle.onclick = () => checkChoice(option.name);
+    choicesDiv.appendChild(circle);
+  });
+  choicesDiv.classList.add('show');
+}
+
+function checkChoice(name) {
+  document.getElementById('choices').classList.remove('show');
+  document.getElementById('choices').innerHTML = '';
+  const isCorrect = [currentSong.name.toLowerCase(), ...currentSong.aliases].some(a => a.toLowerCase() === name.toLowerCase());
+  const badge = document.getElementById('resultBadge');
+  badge.classList.remove('show', 'correct', 'wrong', 'dead'); void badge.offsetWidth;
+
+  if (isCorrect) {
+    stopSong();
+    document.getElementById('rdot' + roundIdx).classList.remove('active');
+    document.getElementById('rdot' + roundIdx).classList.add('done');
+    roundIdx++;
+    if (roundIdx >= TOTAL_ROUNDS) {
+      badge.textContent = '✓  Round Clear!'; badge.classList.add('show', 'correct');
+      setTimeout(() => playCorrectSound(true), 120);
+      setTimeout(showSuccess, 900);
+    } else {
+      badge.textContent = '✓  Round ' + roundIdx + '!'; badge.classList.add('show', 'correct');
+      setStatus('Next song — ' + (TOTAL_ROUNDS - roundIdx) + ' round' + (TOTAL_ROUNDS - roundIdx > 1 ? 's' : '') + ' left');
+      currentSong = null;
+      setTimeout(() => playCorrectSound(false), 120);
+      updateRoundDots();
+      setTimeout(() => { badge.classList.remove('show'); setStatus('▶ Click the jukebox for the next song'); }, 1800);
+    }
+  } else {
+    loseLife(); triggerShake(); playWrongSound();
+    const wrong = 3 - lives;
+    applyGrunge(wrong); updateJukeboxState();
+    if (lives === 0) {
+      gameDead = true;
+      badge.textContent = '✗  Gone'; badge.classList.add('show', 'dead');
+      playing = false; document.getElementById('eqBars').classList.remove('active');
+      setTimeout(showGameOver, 1500);
+    } else {
+      badge.textContent = '✗  Wrong — ' + lives + ' left'; badge.classList.add('show', 'wrong');
+      setStatus('↺ Click to replay · ' + lives + ' attempt' + (lives > 1 ? 's' : '') + ' remaining');
+      playing = false;
+      setTimeout(() => badge.classList.remove('show'), 2200);
+    }
+  }
+}
+
 updateJukeboxState();
 </script>
 </body>
