@@ -23,6 +23,17 @@
     font-family: 'Barlow Condensed', sans-serif;
     overflow: hidden;
     transition: background 1s ease;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="8" cy="16" r="3" fill="%231a1a1a" opacity="0.9"/><path d="M11 16 L11 4" stroke="%231a1a1a" stroke-width="2" stroke-linecap="round" opacity="0.9"/><path d="M11 4 Q11 2 13 2 Q14 2 14 4" stroke="%231a1a1a" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.9"/></svg>') 8 0, auto;
+  }
+  body.rainbow-mode {
+    background: linear-gradient(135deg, #ff0080, #ff8c00, #ffff00, #00ff00, #00ffff, #0080ff, #ff00ff, #ff0080);
+    background-size: 400% 400%;
+    animation: rainbowShift 6s ease infinite;
+  }
+  @keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   /* No darkness veil — we go grungy instead */
   .card {
@@ -57,12 +68,18 @@
   /* Level 1 — ink bleed + heavy grain, rust tint */
   #grungeL1 {
     background:
-      radial-gradient(ellipse 180px 120px at 12% 80%, rgba(80,40,10,0.22) 0%, transparent 70%),
-      radial-gradient(ellipse 140px 90px  at 88% 15%, rgba(60,20,0,0.18)  0%, transparent 70%),
+      radial-gradient(ellipse 200px 130px at 12% 80%, rgba(60,25,5,0.35) 0%, transparent 65%),
+      radial-gradient(ellipse 160px 100px at 88% 15%, rgba(45,15,0,0.3)  0%, transparent 65%),
+      radial-gradient(ellipse 120px 80px  at 45% 60%, rgba(50,20,5,0.25) 0%, transparent 70%),
       repeating-linear-gradient(
         47deg,
         transparent 0px, transparent 3px,
-        rgba(30,15,0,0.04) 3px, rgba(30,15,0,0.04) 4px
+        rgba(25,10,0,0.08) 3px, rgba(25,10,0,0.08) 4px
+      ),
+      repeating-linear-gradient(
+        -23deg,
+        transparent 0px, transparent 4px,
+        rgba(20,8,0,0.06) 4px, rgba(20,8,0,0.06) 5px
       );
     mix-blend-mode: multiply;
   }
@@ -71,17 +88,51 @@
   /* Level 2 — deeper stains, ink splatter, scratches */
   #grungeL2 {
     background:
-      radial-gradient(ellipse 220px 140px at 75% 90%, rgba(100,45,0,0.28)  0%, transparent 65%),
-      radial-gradient(ellipse 160px 100px at 5%  20%, rgba(70,30,5,0.24)   0%, transparent 65%),
-      radial-gradient(ellipse 80px  50px  at 50% 50%, rgba(40,10,0,0.12)   0%, transparent 70%),
+      radial-gradient(ellipse 280px 180px at 75% 90%, rgba(80,25,0,0.45)  0%, transparent 60%),
+      radial-gradient(ellipse 200px 120px at 5%  20%, rgba(50,15,0,0.4)   0%, transparent 60%),
+      radial-gradient(ellipse 150px 100px at 50% 50%, rgba(30,5,0,0.3)    0%, transparent 65%),
+      radial-gradient(ellipse 120px 80px  at 25% 75%, rgba(60,20,5,0.35)  0%, transparent 70%),
+      radial-gradient(ellipse 100px 60px  at 85% 35%, rgba(40,10,0,0.25)  0%, transparent 75%),
       repeating-linear-gradient(
         -33deg,
-        transparent 0px, transparent 5px,
-        rgba(20,8,0,0.06) 5px, rgba(20,8,0,0.06) 6px
+        transparent 0px, transparent 4px,
+        rgba(15,5,0,0.12) 4px, rgba(15,5,0,0.12) 5px
+      ),
+      repeating-linear-gradient(
+        47deg,
+        transparent 0px, transparent 6px,
+        rgba(20,8,0,0.08) 6px, rgba(20,8,0,0.08) 7px
       );
     mix-blend-mode: multiply;
   }
   #grungeL2.show { opacity: 1; }
+
+  /* Level 3 — extreme grunge, final life */
+  #grungeL3 {
+    background:
+      radial-gradient(ellipse 350px 220px at 60% 80%, rgba(20,5,0,0.6)    0%, transparent 50%),
+      radial-gradient(ellipse 250px 150px at 20% 30%, rgba(15,3,0,0.55)   0%, transparent 55%),
+      radial-gradient(ellipse 180px 120px at 80% 20%, rgba(25,8,0,0.5)    0%, transparent 60%),
+      radial-gradient(ellipse 140px 90px  at 40% 60%, rgba(10,2,0,0.45)   0%, transparent 65%),
+      radial-gradient(ellipse 100px 70px  at 90% 70%, rgba(30,10,0,0.4)   0%, transparent 70%),
+      repeating-linear-gradient(
+        23deg,
+        transparent 0px, transparent 3px,
+        rgba(8,2,0,0.2) 3px, rgba(8,2,0,0.2) 4px
+      ),
+      repeating-linear-gradient(
+        -67deg,
+        transparent 0px, transparent 5px,
+        rgba(12,4,0,0.15) 5px, rgba(12,4,0,0.15) 6px
+      ),
+      repeating-linear-gradient(
+        89deg,
+        transparent 0px, transparent 7px,
+        rgba(6,1,0,0.18) 7px, rgba(6,1,0,0.18) 8px
+      );
+    mix-blend-mode: multiply;
+  }
+  #grungeL3.show { opacity: 1; }
 
   /* SVG scratch marks — injected via JS per level */
   #scratchOverlay {
@@ -90,12 +141,22 @@
   }
 
   /* Rust/sepia tint on the whole card per damage level */
-  .card.damage-1 { filter: sepia(0.18) contrast(1.04); border-color: #7a6040; box-shadow: 0 8px 50px rgba(80,40,0,.35), inset 0 0 30px rgba(60,30,0,0.08); }
-  .card.damage-2 { filter: sepia(0.38) contrast(1.09) saturate(0.85); border-color: #6a4828; box-shadow: 0 8px 50px rgba(100,50,0,.45), inset 0 0 50px rgba(80,35,0,0.14); }
+  .card.damage-1 {
+    filter: sepia(0.3) contrast(1.08) saturate(0.8) brightness(0.85);
+    border-color: #5a3a20;
+    box-shadow: 0 8px 50px rgba(60,25,0,.5), inset 0 0 40px rgba(40,15,0,0.12);
+    background: linear-gradient(45deg, rgba(50,25,15,0.08), rgba(70,35,20,0.04));
+  }
+  .card.damage-2 {
+    filter: sepia(0.6) contrast(1.2) saturate(0.6) brightness(0.7) hue-rotate(15deg);
+    border-color: #3a2010;
+    box-shadow: 0 8px 50px rgba(30,10,0,.6), inset 0 0 80px rgba(20,5,0,0.25);
+    background: linear-gradient(45deg, rgba(40,20,10,0.1), rgba(60,30,15,0.05));
+  }
 
   /* Body bg shifts warm/dusty */
-  body.damage-1 { background: #b0a48c; }
-  body.damage-2 { background: #a89070; }
+  body.damage-1 { background: #8a6a4a; }
+  body.damage-2 { background: #2a1a0f; }
 
   /* TITLE */
   .title {
@@ -243,63 +304,157 @@
     text-transform:uppercase;
   }
 
-  /* CHOICES */
-  #choices {
+  /* ANSWER */
+  .answer-area {
+    position:absolute;
+    bottom:19vh; left:50%; transform:translateX(-50%);
+    display:none;
+    z-index:8; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity 0.35s;
+  }
+  .answer-area.show { opacity:1; pointer-events:all; }
+  .answer-input {
+    background:rgba(255,255,255,0.82); border:2px solid var(--ink);
+    border-radius:2px; padding:5px 9px;
+    font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:0.82rem;
+    letter-spacing:0.1em; width:22vw; outline:none; font-size:1.4vw;
+  }
+  .answer-btn {
+    background:var(--ink); color:#fff; border:none; border-radius:2px;
+    padding:0.8vh 1.2vw; font-family:'Barlow Condensed', sans-serif; font-weight:700; font-size:1.2vw;
+    letter-spacing:0.18em; text-transform:uppercase;
+    cursor:pointer; transition:background 0.15s;
+  }
+  .answer-btn:hover { background:var(--accent); }
+
+  /* CASSETTE CHOICES */
+  #cassettes {
     position: absolute;
     bottom: 12vh; left: 50%; transform: translateX(-50%);
-    width: 400px; height: 120px;
+    width: 450px; height: 130px;
     z-index: 8;
     opacity: 0; pointer-events: none; transition: opacity 0.35s;
+    display: flex; align-items: center; justify-content: center; gap: 15px;
   }
-  #choices.show { opacity: 1; pointer-events: all; }
-  .choice-circle {
-    width: 100px; height: 100px;
-    border-radius: 50%;
+  #cassettes.show { opacity: 1; pointer-events: all; }
+  .cassette-tape {
+    width: 110px; height: 75px;
+    background: linear-gradient(135deg, var(--tape-color) 0%, rgba(0,0,0,0.2) 100%);
+    border: 2px solid rgba(0,0,0,0.3);
+    border-radius: 6px;
     cursor: pointer;
-    transition: transform 0.5s ease 0.2s;
-    position: absolute;
-    transform-style: preserve-3d;
-    perspective: 1000px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
   }
-  .choice-circle:nth-child(1) { left: 40px; z-index: 4; }
-  .choice-circle:nth-child(2) { left: 110px; z-index: 3; }
-  .choice-circle:nth-child(3) { left: 180px; z-index: 2; }
-  .choice-circle:nth-child(4) { left: 250px; z-index: 1; }
-  .choice-circle .front, .choice-circle .back {
-    position: absolute;
-    width: 100%; height: 100%;
-    backface-visibility: hidden;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px;
-    color: white; text-align: center;
-    box-shadow: inset 0 0 20px rgba(255,255,255,0.2);
+  .cassette-tape:hover {
+    transform: scale(1.08) translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
   }
-  .choice-circle .front {
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), var(--color));
-  }
-  .choice-circle .front::before {
+  .cassette-tape::before,
+  .cassette-tape::after {
     content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), #222);
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.5);
+    box-shadow: inset 0 -1px 2px rgba(0,0,0,0.5);
+    top: 50%; transform: translateY(-50%);
+  }
+  .cassette-tape::before { left: 8px; }
+  .cassette-tape::after { right: 8px; }
+  .cassette-label {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 15px; height: 15px;
-    background: #111;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #1a1a1a;
+    padding: 0 20px;
+    width: 100%;
+    line-height: 1.3;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    pointer-events: none;
+  }
+
+  /* ── CURSOR TRAIL ── */
+  .cursor-trail {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
     border-radius: 50%;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    animation: trailFade 0.8s ease-out forwards;
   }
-  .choice-circle .back {
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), var(--color));
-    transform: rotateY(180deg);
+  @keyframes trailFade {
+    0% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.1);
+    }
   }
-  .choice-circle:hover {
-    transform: rotateY(180deg) translateX(-160px);
-    z-index: 10;
+
+  /* ── VISUAL EFFECTS (NOTES + PARTICLES) ── */
+  #visualEffects {
+    position: absolute; inset: 0;
+    z-index: 5; pointer-events: none;
   }
-  .choice-circle:nth-child(1):hover,
-  .choice-circle:nth-child(2):hover {
-    transform: rotateY(180deg) translateX(160px);
+  .falling-note {
+    position: absolute;
+    font-size: 3vw;
+    animation: fallNote linear forwards;
+    opacity: 0.7;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transform-origin: center;
+  }
+  @keyframes fallNote {
+    0% {
+      opacity: 0.8;
+      transform: translateY(-10vh) rotate(0deg) scale(1);
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(110vh) rotate(360deg) scale(0.3);
+    }
+  }
+  .falling-note.damage-1 {
+    filter: grayscale(0.5) drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+    opacity: 0.55;
+  }
+  .falling-note.damage-2 {
+    filter: grayscale(0.9) drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+    opacity: 0.4;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: floatParticle ease-in forwards;
+    background: rgba(26, 26, 26, 0.15);
+  }
+  .particle.damage-1 {
+    background: rgba(10, 10, 10, 0.35);
+  }
+  .particle.damage-2 {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  @keyframes floatParticle {
+    0% {
+      opacity: 0.6;
+      transform: translateY(0) translateX(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(80vh) translateX(var(--drift)) scale(0.2);
+    }
   }
 
   /* RESULT BADGE */
@@ -431,6 +586,7 @@
   <!-- GRUNGE DAMAGE LAYERS -->
   <div class="grunge-layer" id="grungeL1"></div>
   <div class="grunge-layer" id="grungeL2"></div>
+  <div class="grunge-layer" id="grungeL3"></div>
   <!-- SVG scratches drawn by JS -->
   <svg id="scratchOverlay" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:31;"></svg>
 
@@ -508,13 +664,13 @@
     <span class="lo">prove you're human</span>
   </div>
 
-  <!-- JUKEBOX — 3 stacked damage states -->
+  <!-- BOOMBOX — 3 stacked damage states -->
   <div class="jukebox-wrap" id="jukeboxWrap" onclick="handleClick()">
     <div id="jukeboxContainer">
 
       <!-- STATE 0: Healthy — swap src on #jbox0img -->
       <div class="jbox-state" id="jbox0">
-        <img id="jbox0img" src="img/jukebox1.png" alt="Jukebox healthy"
+        <img id="jbox0img" src="img/jukebox1.png" alt="Boombox healthy"
                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;transform:scale(1.3);filter:sepia(0.9) brightness(0.65);"/>
         <span style="position:relative;padding:10px;line-height:1.6;">
         </span>
@@ -522,7 +678,7 @@
 
       <!-- STATE 1: Cracked (1 wrong) — swap src on #jbox1img -->
       <div class="jbox-state" id="jbox1">
-        <img id="jbox1img" src="img/jukebox2.png" alt="Jukebox cracked"
+        <img id="jbox1img" src="img/jukebox2.png" alt="Boombox cracked"
                   style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;transform:scale(1.3);filter:sepia(0.9) brightness(0.65);"/>
         <span style="position:relative;padding:10px;line-height:1.6;">
         </span>
@@ -530,7 +686,7 @@
 
       <!-- STATE 2: Broken (2 wrong) — swap src on #jbox2img -->
       <div class="jbox-state" id="jbox2">
-        <img id="jbox2img" src="img/jukebox3.png" alt="Jukebox broken"
+        <img id="jbox2img" src="img/jukebox3.png" alt="Boombox broken"
                   style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;transform:scale(1.3);filter:sepia(0.9) brightness(0.65);"/>
         <span style="position:relative;padding:10px;line-height:1.6;">
         </span>
@@ -546,8 +702,17 @@
     <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
   </div>
 
-  <!-- CHOICES -->
-  <div id="choices"></div>
+  <!-- ANSWER -->
+  <div class="answer-area" id="answerArea">
+    <input class="answer-input" id="answerInput" type="text" placeholder="Song name…" autocomplete="off"/>
+    <button class="answer-btn" onclick="checkAnswer()">Submit</button>
+  </div>
+
+  <!-- CASSETTES -->
+  <div id="cassettes"></div>
+
+  <!-- VISUAL EFFECTS: falling notes & particles -->
+  <div id="visualEffects"></div>
 
   <!-- BOTTOM BAR: round dots + divider + lives, all in one row -->
   <div id="bottomBar">
@@ -591,7 +756,7 @@
   </div>
 
   <!-- STATUS -->
-  <div class="status" id="status">▶ Click the jukebox to hear the song</div>
+  <div class="status" id="status">▶ Click the boombox to hear the song</div>
 
   <!-- RESULT BADGE -->
   <div class="result-badge" id="resultBadge"></div>
@@ -609,7 +774,7 @@
 
   <!-- GAME OVER OVERLAY -->
   <div id="gameOverlay">
-    <div class="go-title">Jukebox Dead</div>
+    <div class="go-title">Boombox Dead</div>
     <div class="go-sub">You couldn't name the tune.<br>The machine stays silent.</div>
     <button id="retryBtn" onclick="resetGame()">↺  Try Again</button>
   </div>
@@ -751,34 +916,115 @@ let songMasterGain = null; // so we can cut it early
 
 function playSong(song) {
   const ctx = getCtx();
+  const damageLevel = 3 - lives; // 0=healthy, 1=damaged, 2=heavily damaged
+  
+  // Apply audio degradation based on damage level
+  const speedMult = 1 - (damageLevel * 0.15); // Slow down: 1x → 0.85x → 0.7x
+  const freqMult = 1 - (damageLevel * 0.12); // Lower pitch: 1x → 0.88x → 0.76x
+  const distortion = damageLevel * 0.4; // Increase distortion: 0 → 0.4 → 0.8
+  const reverbAmount = 0.4 + (damageLevel * 0.2); // More reverb: 0.4 → 0.6 → 0.8
+  
   const master = ctx.createGain(); master.gain.setValueAtTime(0.07, ctx.currentTime);
   songMasterGain = master; // store reference
-  const lpf = ctx.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.setValueAtTime(900,ctx.currentTime); lpf.Q.setValueAtTime(1.2,ctx.currentTime);
-  const conv = ctx.createConvolver();
-  const len = ctx.sampleRate*1.6; const buf = ctx.createBuffer(2,len,ctx.sampleRate);
-  for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5);}
-  conv.buffer=buf;
-  const revG=ctx.createGain(); revG.gain.setValueAtTime(0.4,ctx.currentTime);
-  lpf.connect(master); master.connect(ctx.destination);
-  lpf.connect(conv); conv.connect(revG); revG.connect(ctx.destination);
-  let t=ctx.currentTime+0.05; const beats=[];
-  song.notes.forEach(([freq,dur])=>{
-    if(freq>0){
-      const osc=ctx.createOscillator(); const env=ctx.createGain();
-      osc.type='sine'; osc.frequency.setValueAtTime(freq,t);
-      env.gain.setValueAtTime(0,t); env.gain.linearRampToValueAtTime(1,t+0.01);
-      env.gain.setValueAtTime(1,t+dur*.7); env.gain.linearRampToValueAtTime(0,t+dur);
-      osc.connect(env); env.connect(lpf); osc.start(t); osc.stop(t+dur);
-      beats.push(t-ctx.currentTime);
+  
+  // Add distortion waveshaper on damage
+  let chain = master;
+  if (damageLevel > 0) {
+    const dist = ctx.createWaveShaper();
+    const distCurve = new Float32Array(44100);
+    for (let i = 0; i < 44100; i++) {
+      const x = (i / 22050) - 1;
+      distCurve[i] = ((Math.PI + distortion) * x) / (Math.PI + distortion * Math.abs(x));
     }
-    t+=dur;
+    dist.curve = distCurve;
+    chain = dist;
+    chain.connect(master);
+  }
+  
+  const lpf = ctx.createBiquadFilter();
+  lpf.type = 'lowpass';
+  lpf.frequency.setValueAtTime(900 - (damageLevel * 200), ctx.currentTime);
+  lpf.Q.setValueAtTime(1.2 + (damageLevel * 0.5), ctx.currentTime);
+  
+  const conv = ctx.createConvolver();
+  const len = ctx.sampleRate * 1.6;
+  const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+  for(let ch = 0; ch < 2; ch++) {
+    const d = buf.getChannelData(ch);
+    for(let i = 0; i < len; i++) {
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5);
+    }
+  }
+  conv.buffer = buf;
+  const revG = ctx.createGain();
+  revG.gain.setValueAtTime(reverbAmount, ctx.currentTime);
+  
+  // Add noise generator on heavy damage
+  let noiseNode = null;
+  if (damageLevel >= 2) {
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.04, ctx.currentTime);
+    const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < noiseBuffer.length; i++) {
+      noiseData[i] = Math.random() * 2 - 1;
+    }
+    const noiseSource = ctx.createBufferSource();
+    noiseSource.buffer = noiseBuffer;
+    noiseSource.loop = true;
+    noiseSource.connect(noiseGain);
+    noiseNode = { source: noiseSource, gain: noiseGain };
+  }
+  
+  lpf.connect(chain);
+  chain.connect(ctx.destination);
+  lpf.connect(conv);
+  conv.connect(revG);
+  revG.connect(ctx.destination);
+  
+  let t = ctx.currentTime + 0.05;
+  const beats = [];
+  
+  song.notes.forEach(([freq, dur]) => {
+    const adjustedDur = dur / speedMult;
+    if(freq > 0) {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = 'sine';
+      const adjustedFreq = freq * freqMult;
+      osc.frequency.setValueAtTime(adjustedFreq, t);
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(1, t + 0.01);
+      env.gain.setValueAtTime(1, t + adjustedDur * 0.7);
+      env.gain.linearRampToValueAtTime(0, t + adjustedDur);
+      osc.connect(env);
+      env.connect(lpf);
+      osc.start(t);
+      osc.stop(t + adjustedDur);
+      beats.push(t - ctx.currentTime);
+    }
+    t += adjustedDur;
   });
-  beats.forEach(bt=>setTimeout(triggerBoom,bt*1000));
-  setTimeout(()=>{
-    playing=false;
+  
+  if (noiseNode) {
+    noiseNode.source.start(ctx.currentTime);
+  }
+  
+  beats.forEach(bt => setTimeout(triggerBoom, bt * 1000));
+  startVisualEffects(damageLevel);
+  
+  // Rainbow mode: only in round 1 (roundIdx === 0) and no damage yet
+  if (roundIdx === 0 && damageLevel === 0) {
+    document.body.classList.add('rainbow-mode');
+  }
+  
+  const totalDuration = (t - ctx.currentTime) * 1000 + 200;
+  setTimeout(() => {
+    if (noiseNode) noiseNode.source.stop();
+    playing = false;
     document.getElementById('eqBars').classList.remove('active');
-    if(!gameDead&&currentSong) showChoices();
-  },(t-ctx.currentTime)*1000+200);
+    if(!gameDead && currentSong) showCassettes();
+  }, totalDuration);
 }
 
 function stopSong() {
@@ -789,8 +1035,10 @@ function stopSong() {
   }
   playing = false;
   document.getElementById('eqBars').classList.remove('active');
-  document.getElementById('choices').classList.remove('show');
-  document.getElementById('choices').innerHTML = '';
+  document.getElementById('cassettes').classList.remove('show');
+  document.getElementById('cassettes').innerHTML = '';
+  document.body.classList.remove('rainbow-mode');
+  clearVisualEffects();
 }
 
 // ── BOOM / SHAKE ──────────────────────────────────────────────────────────────
@@ -806,7 +1054,7 @@ function triggerShake() {
   setTimeout(()=>c.classList.remove('shake'),450);
 }
 
-// ── JUKEBOX DAMAGE STATES ─────────────────────────────────────────────────────
+// ── BOOMBOX DAMAGE STATES ─────────────────────────────────────────────────────
 function updateJukeboxState() {
   const d = 3 - lives; // 0=healthy, 1=cracked, 2=broken
   [0,1,2].forEach(i=>{
@@ -817,131 +1065,136 @@ function updateJukeboxState() {
 }
 
 // ── GRUNGE DAMAGE ─────────────────────────────────────────────────────────────
-const SCRATCH_SETS = [
-  ["M 50 420 Q 180 390 340 450","M 820 185 Q 890 220 970 175","M 460 880 Q 580 855 720 900"],
-  ["M 50 420 Q 180 390 340 450","M 820 185 Q 890 220 970 175","M 460 880 Q 580 855 720 900",
-   "M 90 140 Q 290 185 500 115","M 640 695 Q 790 740 940 685","M 15 745 Q 110 720 195 775","M 860 465 Q 930 500 990 475"]
-];
 
 function applyGrunge(wrongCount) {
   const card = document.getElementById('card');
   const body = document.body;
   const l1   = document.getElementById('grungeL1');
   const l2   = document.getElementById('grungeL2');
-  const svg  = document.getElementById('scratchOverlay');
+  const l3   = document.getElementById('grungeL3');
   card.classList.remove('damage-1','damage-2');
   body.classList.remove('damage-1','damage-2');
-  l1.classList.remove('show'); l2.classList.remove('show');
-  svg.innerHTML = '';
+  l1.classList.remove('show'); l2.classList.remove('show'); l3.classList.remove('show');
   if(wrongCount===0) return;
   const level = Math.min(wrongCount,2);
   card.classList.add('damage-'+level);
   body.classList.add('damage-'+level);
   if(level>=1) l1.classList.add('show');
-  if(level>=2) l2.classList.add('show');
-  SCRATCH_SETS[level-1].forEach(d=>{
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d',d); path.setAttribute('fill','none');
-    path.setAttribute('stroke','rgba(20,8,0,0.28)');
-    path.setAttribute('stroke-width',level===2?'1.5':'1');
-    path.setAttribute('stroke-linecap','round');
-    svg.appendChild(path);
-    const len=path.getTotalLength?path.getTotalLength():200;
-    path.style.strokeDasharray=len; path.style.strokeDashoffset=len;
-    path.style.transition='stroke-dashoffset 0.6s ease';
-    requestAnimationFrame(()=>{path.style.strokeDashoffset='0';});
-  });
+  if(level>=2) {
+    l2.classList.add('show');
+    l3.classList.add('show'); // Extreme grunge for final life
+  }
 }
 
-// ── CORRECT SOUND (upbeat grungy electric guitar) ────────────────────────────
-function playCorrectSound(isFinal) {
+// ── CORRECT SOUND (clean success chime) ────────────────────────────
+function playCorrectSound(isFinal, livesRemaining = 3) {
   const ctx = getCtx();
-  const t   = ctx.currentTime;
-
-  function makeDistCurve(amount) {
-    const n = 512, curve = new Float32Array(n);
-    for (let i = 0; i < n; i++) {
-      const x = (i * 2) / n - 1;
-      curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
-    }
-    return curve;
-  }
-  function makeCab() {
-    const lo  = ctx.createBiquadFilter(); lo.type='lowpass';  lo.frequency.value=5400; lo.Q.value=0.7;
-    const hi  = ctx.createBiquadFilter(); hi.type='highpass'; hi.frequency.value=100;  hi.Q.value=0.5;
-    const mid = ctx.createBiquadFilter(); mid.type='peaking'; mid.frequency.value=2600; mid.gain.value=5; mid.Q.value=1.1;
-    lo.connect(hi); hi.connect(mid); return { input:lo, output:mid };
-  }
-
-  // Bright, snappy guitar note with lighter crunch than the wrong sound
-  function strum(freq, startT, dur, vel) {
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    osc1.type='sawtooth'; osc1.frequency.value=freq;
-    osc2.type='sawtooth'; osc2.frequency.value=freq*1.007;
-
-    // Slight pitch bend upward — "happy" inflection
-    osc1.frequency.setTargetAtTime(freq*1.015, startT+0.01, 0.04);
-    osc2.frequency.setTargetAtTime(freq*1.015*1.007, startT+0.01, 0.04);
-
-    const noiseLen = ctx.sampleRate * 0.025;
-    const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
-    const nd = noiseBuf.getChannelData(0);
-    for (let i=0;i<noiseLen;i++) nd[i]=(Math.random()*2-1)*Math.pow(1-i/noiseLen,3);
-    const noise = ctx.createBufferSource(); noise.buffer=noiseBuf;
-
-    const env = ctx.createGain();
-    env.gain.setValueAtTime(0, startT);
-    env.gain.linearRampToValueAtTime(vel, startT+0.007);
-    env.gain.setTargetAtTime(vel*0.5, startT+0.007, 0.03);
-    env.gain.setTargetAtTime(0, startT+0.06, dur*0.35);
-
-    const dist  = ctx.createWaveShaper(); dist.curve=makeDistCurve(180); dist.oversample='4x';
-    const preG  = ctx.createGain(); preG.gain.value = 2.8;
-    const outG  = ctx.createGain(); outG.gain.value = 0.07; // quiet
-    const cab   = makeCab();
-
-    osc1.connect(env); osc2.connect(env); noise.connect(env);
-    env.connect(preG); preG.connect(dist); dist.connect(cab.input);
-    cab.output.connect(outG); outG.connect(ctx.destination);
-
-    osc1.start(startT); osc2.start(startT);
-    osc1.stop(startT+dur+0.4); osc2.stop(startT+dur+0.4);
-    noise.start(startT); noise.stop(startT+0.03);
-  }
-
-  // Amp hum
-  function hum(startT, dur) {
-    const h=ctx.createOscillator(); const hG=ctx.createGain();
-    h.type='sine'; h.frequency.value=60;
-    hG.gain.setValueAtTime(0.012, startT);
-    hG.gain.linearRampToValueAtTime(0, startT+dur);
-    h.connect(hG); hG.connect(ctx.destination);
-    h.start(startT); h.stop(startT+dur+0.05);
-  }
+  const t = ctx.currentTime;
 
   if (isFinal) {
-    // Triumphant major chord strum: E A D G B — quick upstroke
-    // E major open chord voiced across strings
-    const chord = [82, 110, 165, 220, 277, 330]; // E2 A2 E3 A3 C#4 E4
-    chord.forEach((f, i) => strum(f, t + i*0.028, 0.9, 0.9 - i*0.06));
-    // Cheeky little slide up to octave E after — exclamation point
-    const slideOsc = ctx.createOscillator();
-    const slideG   = ctx.createGain();
-    slideOsc.type='sawtooth'; slideOsc.frequency.setValueAtTime(164, t+0.22);
-    slideOsc.frequency.linearRampToValueAtTime(329, t+0.38); // slide E3→E4
-    slideG.gain.setValueAtTime(0, t+0.22);
-    slideG.gain.linearRampToValueAtTime(0.06, t+0.24);
-    slideG.gain.linearRampToValueAtTime(0, t+0.55);
-    const slideD=ctx.createWaveShaper(); slideD.curve=makeDistCurve(200);
-    slideOsc.connect(slideD); slideD.connect(slideG); slideG.connect(ctx.destination);
-    slideOsc.start(t+0.22); slideOsc.stop(t+0.6);
-    hum(t, 1.2);
+    // Triumphant victory melody - cleaner and less complex
+    const notes = [
+      {freq: 523, time: 0,    dur: 0.15}, // C5
+      {freq: 659, time: 0.08, dur: 0.15}, // E5
+      {freq: 784, time: 0.16, dur: 0.15}, // G5
+      {freq: 1047, time: 0.24, dur: 0.4}  // C6
+    ];
+
+    notes.forEach(note => {
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(note.freq, t + note.time);
+
+      env.gain.setValueAtTime(0, t + note.time);
+      env.gain.linearRampToValueAtTime(0.08, t + note.time + 0.01);
+      env.gain.setTargetAtTime(0, t + note.time + note.dur, 0.05);
+
+      osc.connect(env);
+      env.connect(ctx.destination);
+
+      osc.start(t + note.time);
+      osc.stop(t + note.time + note.dur + 0.1);
+    });
   } else {
-    // Quick two-note "yeah!" power stab — root + fifth
-    strum(164, t,      0.4, 0.9);  // E3
-    strum(246, t+0.08, 0.4, 0.8);  // B3 (fifth)
-    hum(t, 0.7);
+    // Progressive grunge based on lives remaining
+    const livesLost = 3 - livesRemaining; // 0, 1, or 2
+    const grungeLevel = livesLost; // 0=none, 1=some grunge, 2=more grunge
+
+    // Base success ding
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, t);
+    osc.frequency.exponentialRampToValueAtTime(1200, t + 0.2);
+
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.06, t + 0.01);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+
+    // Add grunge effects based on lives lost
+    if (grungeLevel > 0) {
+      // Create distortion curve
+      function makeDistCurve(amount) {
+        const n = 256;
+        const curve = new Float32Array(n);
+        for (let i = 0; i < n; i++) {
+          const x = (i * 2) / n - 1;
+          curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
+        }
+        return curve;
+      }
+
+      // Wave shaper for distortion
+      const dist = ctx.createWaveShaper();
+      dist.curve = makeDistCurve(100 + grungeLevel * 200); // More distortion with more lives lost
+      dist.oversample = '2x';
+
+      // Pre-gain to drive the distortion
+      const preGain = ctx.createGain();
+      preGain.gain.value = 1 + grungeLevel * 0.5; // More drive with more lives lost
+
+      // Low-pass filter to make it sound more worn
+      const lpf = ctx.createBiquadFilter();
+      lpf.type = 'lowpass';
+      lpf.frequency.value = 3000 - grungeLevel * 500; // Lower cutoff with more lives lost
+      lpf.Q.value = 0.7;
+
+      // Add some noise for extra grunge
+      if (grungeLevel >= 2) {
+        const noiseLen = ctx.sampleRate * 0.15;
+        const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
+        const nd = noiseBuf.getChannelData(0);
+        for (let i = 0; i < noiseLen; i++) {
+          nd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / noiseLen, 2) * 0.02;
+        }
+        const noiseNode = ctx.createBufferSource();
+        noiseNode.buffer = noiseBuf;
+        const noiseEnv = ctx.createGain();
+        noiseEnv.gain.setValueAtTime(0, t);
+        noiseEnv.gain.linearRampToValueAtTime(0.01, t + 0.01);
+        noiseEnv.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+        noiseNode.connect(noiseEnv);
+        noiseEnv.connect(lpf);
+        noiseNode.start(t);
+        noiseNode.stop(t + 0.25);
+      }
+
+      // Connect the chain: osc -> env -> preGain -> dist -> lpf -> destination
+      osc.connect(env);
+      env.connect(preGain);
+      preGain.connect(dist);
+      dist.connect(lpf);
+      lpf.connect(ctx.destination);
+    } else {
+      // Clean version for first life
+      osc.connect(env);
+      env.connect(ctx.destination);
+    }
+
+    osc.start(t);
+    osc.stop(t + 0.3);
   }
 }
 
@@ -1035,22 +1288,7 @@ function playGameOverGuitar() {
   hum.connect(humG); humG.connect(ctx.destination); hum.start(t+0.2); hum.stop(t+5.2);
 }
 
-// ── HOVER SOUND ────────────────────────────────────────────────────────────────
-function playHoverSound() {
-  const ctx = getCtx();
-  const t = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  const env = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(1000, t);
-  osc.frequency.exponentialRampToValueAtTime(400, t + 0.05);
-  env.gain.setValueAtTime(0.05, t);
-  env.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-  osc.connect(env);
-  env.connect(ctx.destination);
-  osc.start(t);
-  osc.stop(t + 0.1);
-}
+
 
 // ── ROUND / QUEUE ─────────────────────────────────────────────────────────────
 function buildQueue() {
@@ -1076,14 +1314,7 @@ function loseLife(){
 
 // ── CLICK HANDLER ─────────────────────────────────────────────────────────────
 function handleClick(){
-  if(gameDead) return;
-  if(playing) {
-    stopSong();
-    setStatus('▶ Click to hear again');
-    document.getElementById('choices').classList.remove('show');
-    document.getElementById('choices').innerHTML = '';
-    return;
-  }
+  if(playing||gameDead) return;
   playing=true;
   if(roundIdx===0 && !currentSong){
     buildQueue();
@@ -1093,8 +1324,9 @@ function handleClick(){
   }
   if(!currentSong){
     currentSong=songQueue[roundIdx];
+    document.getElementById('answerArea').classList.add('show');
+    document.getElementById('answerInput').value='';
   }
-  showChoices();
   setStatus('🎵 Listen carefully…');
   document.getElementById('eqBars').classList.add('active');
   document.getElementById('resultBadge').classList.remove('show','correct','wrong','dead');
@@ -1126,9 +1358,9 @@ function checkAnswer(){
       setStatus('Next song — '+(TOTAL_ROUNDS-roundIdx)+' round'+(TOTAL_ROUNDS-roundIdx>1?'s':'')+' left');
       document.getElementById('answerInput').value='';
       currentSong=null;
-      setTimeout(()=>playCorrectSound(false), 120);
+      setTimeout(()=>playCorrectSound(false, lives), 120);
       updateRoundDots();
-      setTimeout(()=>{badge.classList.remove('show'); setStatus('▶ Click the jukebox for the next song');},1800);
+      setTimeout(()=>{badge.classList.remove('show'); setStatus('▶ Click the boombox for the next song');},1800);
     }
   } else {
     stopSong();
@@ -1161,19 +1393,79 @@ let victoryNodes = []; // track nodes so we can stop them on reset
 // ── VICTORY R&B BEAT ──────────────────────────────────────────────────────────
 function playVictoryBeat() {
   const ctx = getCtx();
-  const startT = ctx.currentTime + 0.05;
-  const bpm = 88;
-  const beat = 60 / bpm;      // seconds per beat
-  const bar  = beat * 4;      // 4/4
-  const BARS = 32;            // loop for ~1.5 min then naturally trails
-  victoryNodes = [];
-
-  // ── Master bus ──
+  const startT = ctx.currentTime;
   const masterG = ctx.createGain();
-  masterG.gain.setValueAtTime(0, startT);
-  masterG.gain.linearRampToValueAtTime(0.55, startT + 0.4); // gentle fade-in
+  masterG.gain.value = 0.3;
   masterG.connect(ctx.destination);
-  victoryNodes.push(masterG);
+
+  // Simple victory melody - triumphant ascending notes
+  const victoryNotes = [
+    {freq: 523.25, time: 0,    dur: 0.3}, // C5
+    {freq: 659.25, time: 0.4,  dur: 0.3}, // E5
+    {freq: 783.99, time: 0.8,  dur: 0.3}, // G5
+    {freq: 1046.5, time: 1.2,  dur: 0.6}, // C6 - hold longer
+
+    {freq: 523.25, time: 2.0,  dur: 0.2}, // C5
+    {freq: 659.25, time: 2.3,  dur: 0.2}, // E5
+    {freq: 783.99, time: 2.6,  dur: 0.2}, // G5
+    {freq: 1046.5, time: 2.9,  dur: 0.2}, // C6
+    {freq: 1318.5, time: 3.2,  dur: 0.8}, // E6 - high note
+
+    {freq: 783.99, time: 4.2,  dur: 0.3}, // G5
+    {freq: 1046.5, time: 4.6,  dur: 0.3}, // C6
+    {freq: 1318.5, time: 5.0,  dur: 0.3}, // E6
+    {freq: 1568.0, time: 5.4,  dur: 1.0}, // G6 - final high note
+  ];
+
+  victoryNotes.forEach(note => {
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.value = note.freq;
+
+    env.gain.setValueAtTime(0, startT + note.time);
+    env.gain.linearRampToValueAtTime(0.15, startT + note.time + 0.05);
+    env.gain.setTargetAtTime(0, startT + note.time + note.dur * 0.7, note.dur * 0.2);
+
+    osc.connect(env);
+    env.connect(masterG);
+
+    osc.start(startT + note.time);
+    osc.stop(startT + note.time + note.dur + 0.1);
+  });
+
+  // Simple bass accompaniment
+  const bassNotes = [
+    {freq: 130.81, time: 0,   dur: 0.8}, // C3
+    {freq: 164.81, time: 1.0, dur: 0.8}, // E3
+    {freq: 196.00, time: 2.0, dur: 0.8}, // G3
+    {freq: 261.63, time: 3.0, dur: 0.8}, // C4
+    {freq: 196.00, time: 4.0, dur: 0.8}, // G3
+    {freq: 261.63, time: 5.0, dur: 1.2}, // C4 - final
+  ];
+
+  bassNotes.forEach(note => {
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.value = note.freq;
+
+    env.gain.setValueAtTime(0, startT + note.time);
+    env.gain.linearRampToValueAtTime(0.08, startT + note.time + 0.05);
+    env.gain.setTargetAtTime(0, startT + note.time + note.dur * 0.8, note.dur * 0.15);
+
+    osc.connect(env);
+    env.connect(masterG);
+
+    osc.start(startT + note.time);
+    osc.stop(startT + note.time + note.dur + 0.1);
+  });
+
+  // Fade out
+  masterG.gain.setTargetAtTime(0, startT + 6.5, 0.5);
+}
 
   // ── Warm reverb ──
   const revLen = ctx.sampleRate * 2.5;
@@ -1373,17 +1665,8 @@ function playVictoryBeat() {
       playBassNote(freq, barT + offsetBeats * beat, durBeats * beat);
     });
 
-    // Melody (one phrase = 16 beats = 4 bars)
-    if (b % 4 === 0) {
-      melodyPattern.forEach(([freq, offsetBeats, durBeats]) => {
-        playMelNote(freq, barT + offsetBeats * beat, durBeats * beat);
-      });
-    }
-  }
-
-  // Fade out master near the end
-  const totalDur = BARS * bar;
-  masterG.gain.setTargetAtTime(0, startT + totalDur - 3, 1.5);
+  // Fade out
+  masterG.gain.setTargetAtTime(0, startT + 6.5, 0.5);
 }
 function showGameOver(){
   document.getElementById('gameOverlay').classList.add('show');
@@ -1409,10 +1692,13 @@ function resetGame(){
   document.getElementById('card').style.filter='';
   document.getElementById('roundBar').classList.remove('show');
   document.getElementById('barDivider').style.opacity = '0';
-  document.getElementById('choices').classList.remove('show');
-  document.getElementById('choices').innerHTML = '';
+  document.getElementById('answerArea').classList.remove('show');
+  document.getElementById('answerInput').value='';
+  document.getElementById('cassettes').classList.remove('show');
+  document.getElementById('cassettes').innerHTML = '';
+  clearVisualEffects();
   document.getElementById('eqBars').classList.remove('active');
-  setStatus('▶ Click the jukebox to hear the song');
+  setStatus('▶ Click the boombox to hear the song');
   document.getElementById('resultBadge').classList.remove('show','correct','wrong','dead');
   document.getElementById('gameOverlay').classList.remove('show');
   document.getElementById('successOverlay').classList.remove('show');
@@ -1421,10 +1707,27 @@ function resetGame(){
 function setStatus(t){ document.getElementById('status').textContent=t; }
 document.getElementById('answerInput').addEventListener('keydown',e=>{if(e.key==='Enter') checkAnswer();});
 
-// ── CHOICES ───────────────────────────────────────────────────────────────────
-function showChoices() {
-  const choicesDiv = document.getElementById('choices');
-  choicesDiv.innerHTML = '';
+// ── CASSETTE HOVER TONE ───────────────────────────────────────────────────────
+function playCassetteTone() {
+  const ctx = getCtx();
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const env = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(800, t);
+  osc.frequency.exponentialRampToValueAtTime(600, t + 0.08);
+  env.gain.setValueAtTime(0.02, t);
+  env.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+  osc.connect(env);
+  env.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.12);
+}
+
+// ── CASSETTE CHOICES ──────────────────────────────────────────────────────────────────────────────
+function showCassettes() {
+  const cassettesDiv = document.getElementById('cassettes');
+  cassettesDiv.innerHTML = '';
   const allSongs = SONGS.filter(s => s.name !== currentSong.name);
   const wrongs = [];
   while (wrongs.length < 3 && allSongs.length > 0) {
@@ -1432,26 +1735,24 @@ function showChoices() {
     wrongs.push(allSongs.splice(idx, 1)[0]);
   }
   const options = [currentSong, ...wrongs].sort(() => Math.random() - 0.5);
-  const colors = ['#c0392b', '#e8a020', '#2e7d32', '#8e44ad']; // red, yellow, green, purple
+  const tapeColors = ['#e74c3c', '#f39c12', '#27ae60', '#8e44ad']; // red, orange, green, purple
+  
   options.forEach((option, i) => {
-    const circle = document.createElement('div');
-    circle.className = 'choice-circle';
-    circle.style.setProperty('--color', colors[i]);
-    circle.innerHTML = `
-      <div class="front"></div>
-      <div class="back">${option.name}</div>
-    `;
-    circle.onmouseenter = playHoverSound;
-    circle.onclick = () => checkChoice(option.name);
-    choicesDiv.appendChild(circle);
+    const cassette = document.createElement('div');
+    cassette.className = 'cassette-tape';
+    cassette.style.setProperty('--tape-color', tapeColors[i]);
+    cassette.innerHTML = `<div class="cassette-label">${option.name}</div>`;
+    cassette.onmouseenter = playCassetteTone;
+    cassette.onclick = () => checkCassette(option.name);
+    cassettesDiv.appendChild(cassette);
   });
-  choicesDiv.classList.add('show');
+  cassettesDiv.classList.add('show');
 }
 
-function checkChoice(name) {
-  document.getElementById('choices').classList.remove('show');
-  document.getElementById('choices').innerHTML = '';
+function checkCassette(name) {
   const isCorrect = [currentSong.name.toLowerCase(), ...currentSong.aliases].some(a => a.toLowerCase() === name.toLowerCase());
+  document.getElementById('cassettes').classList.remove('show');
+  document.getElementById('cassettes').innerHTML = '';
   const badge = document.getElementById('resultBadge');
   badge.classList.remove('show', 'correct', 'wrong', 'dead'); void badge.offsetWidth;
 
@@ -1468,11 +1769,12 @@ function checkChoice(name) {
       badge.textContent = '✓  Round ' + roundIdx + '!'; badge.classList.add('show', 'correct');
       setStatus('Next song — ' + (TOTAL_ROUNDS - roundIdx) + ' round' + (TOTAL_ROUNDS - roundIdx > 1 ? 's' : '') + ' left');
       currentSong = null;
-      setTimeout(() => playCorrectSound(false), 120);
+      setTimeout(() => playCorrectSound(false, lives), 120);
       updateRoundDots();
-      setTimeout(() => { badge.classList.remove('show'); setStatus('▶ Click the jukebox for the next song'); }, 1800);
+      setTimeout(() => { badge.classList.remove('show'); setStatus('▶ Click the boombox for the next song'); }, 1800);
     }
   } else {
+    stopSong();
     loseLife(); triggerShake(); playWrongSound();
     const wrong = 3 - lives;
     applyGrunge(wrong); updateJukeboxState();
@@ -1488,6 +1790,94 @@ function checkChoice(name) {
       setTimeout(() => badge.classList.remove('show'), 2200);
     }
   }
+}
+
+// ── CURSOR TRAIL EFFECT ───────────────────────────────────────────────────────
+let lastTrailTime = 0;
+const TRAIL_DELAY = 20;
+const TRAIL_COLORS = ['#c0392b', '#e8a020', '#27ae60', '#8e44ad', '#1a1a1a'];
+
+document.addEventListener('mousemove', (e) => {
+  const now = Date.now();
+  if (now - lastTrailTime > TRAIL_DELAY) {
+    createCursorTrail(e.clientX, e.clientY);
+    lastTrailTime = now;
+  }
+});
+
+function createCursorTrail(x, y) {
+  const trail = document.createElement('div');
+  trail.className = 'cursor-trail';
+  const size = 3 + Math.random() * 5;
+  trail.style.width = size + 'px';
+  trail.style.height = size + 'px';
+  trail.style.left = (x - size / 2) + 'px';
+  trail.style.top = (y - size / 2) + 'px';
+  trail.style.background = TRAIL_COLORS[Math.floor(Math.random() * TRAIL_COLORS.length)];
+  trail.style.boxShadow = '0 0 4px rgba(0,0,0,0.3)';
+  document.body.appendChild(trail);
+  setTimeout(() => trail.remove(), 800);
+}
+
+// ── VISUAL EFFECTS SYSTEM ─────────────────────────────────────────────────────
+const noteSymbols = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+
+function startVisualEffects(damageLevel = 0) {
+  const effectsDiv = document.getElementById('visualEffects');
+  effectsDiv.innerHTML = '';
+  
+  // Spawn falling notes over the duration of the song
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const note = document.createElement('div');
+      note.className = 'falling-note';
+      if (damageLevel > 0) note.classList.add('damage-' + damageLevel);
+      note.textContent = noteSymbols[Math.floor(Math.random() * noteSymbols.length)];
+      note.style.left = Math.random() * 100 + '%';
+      note.style.animationDuration = (3 + Math.random() * 3) + 's';
+      note.style.animationDelay = '0s';
+      // Darker colors as damage increases
+      if (damageLevel === 0) {
+        note.style.color = ['#c0392b', '#e8a020', '#27ae60', '#8e44ad'][Math.floor(Math.random() * 4)];
+      } else if (damageLevel === 1) {
+        note.style.color = ['#8b2e1f', '#a8700a', '#1d5a2b', '#6b2e7a'][Math.floor(Math.random() * 4)];
+      } else {
+        note.style.color = ['#4a1a0f', '#5a4a0a', '#0f3617', '#3a1a4a'][Math.floor(Math.random() * 4)];
+      }
+      effectsDiv.appendChild(note);
+    }, i * 200);
+  }
+  
+  // Spawn particles continuously - increase count and darkness with damage
+  const particleCount = damageLevel === 0 ? 3 : damageLevel === 1 ? 5 : 7;
+  const particleInterval = setInterval(() => {
+    for (let p = 0; p < particleCount; p++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      if (damageLevel > 0) particle.classList.add('damage-' + damageLevel);
+      const size = 2 + Math.random() * 8;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = '-20px';
+      particle.style.setProperty('--drift', (Math.random() * 400 - 200) + 'px');
+      const dur = 3 + Math.random() * 4;
+      particle.style.animationDuration = dur + 's';
+      effectsDiv.appendChild(particle);
+    }
+  }, 150);
+  
+  // Store the interval ID for cleanup
+  effectsDiv.particleInterval = particleInterval;
+}
+
+function clearVisualEffects() {
+  const effectsDiv = document.getElementById('visualEffects');
+  if (effectsDiv.particleInterval) {
+    clearInterval(effectsDiv.particleInterval);
+    effectsDiv.particleInterval = null;
+  }
+  effectsDiv.innerHTML = '';
 }
 
 updateJukeboxState();
